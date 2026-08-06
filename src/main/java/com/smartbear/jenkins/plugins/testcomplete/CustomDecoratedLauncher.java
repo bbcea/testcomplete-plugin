@@ -2,7 +2,7 @@ package com.smartbear.jenkins.plugins.testcomplete;
 
 import hudson.Launcher;
 import hudson.Proc;
-import org.apache.commons.lang.StringUtils;
+import hudson.Util;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class CustomDecoratedLauncher extends Launcher.DecoratedLauncher {
             int nbMaskedPasswords = 0;
 
             for(String password: passwords) {
-                if(StringUtils.isNotEmpty(password)) {
+                if(Util.fixEmpty(password) != null) {
                     regex.append(Pattern.quote(password));
                     regex.append('|');
                     try {

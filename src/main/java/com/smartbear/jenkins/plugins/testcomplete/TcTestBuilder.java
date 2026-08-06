@@ -49,7 +49,7 @@ import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import hudson.Util;
 import org.jenkinsci.Symbol;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import org.kohsuke.stapler.*;
@@ -517,7 +517,7 @@ public class TcTestBuilder extends Builder implements Serializable, SimpleBuildS
     }
 
     public boolean usingOldCredentials() {
-        return ((!StringUtils.isEmpty(getUserName())) || (!StringUtils.isEmpty(getUserPassword().getPlainText()))) && (StringUtils.isEmpty(getCredentialsId()));
+        return ((Util.fixEmpty(getUserName()) != null) || (Util.fixEmpty(getUserPassword().getPlainText()) != null)) && (Util.fixEmpty(getCredentialsId()) == null);
     }
 
     private int fixExitCode(int exitCode, Workspace workspace, TaskListener listener) throws IOException, InterruptedException {
@@ -985,7 +985,7 @@ public class TcTestBuilder extends Builder implements Serializable, SimpleBuildS
         } else {
             String credentialsId = env.expand(getCredentialsId());
 
-            if (!StringUtils.isEmpty(credentialsId)) {
+            if (Util.fixEmpty(credentialsId) != null) {
                 StandardUsernamePasswordCredentials credentials = CredentialsProvider.findCredentialById(credentialsId, StandardUsernamePasswordCredentials.class, run);
 
                 if (credentials == null) {
@@ -997,7 +997,7 @@ public class TcTestBuilder extends Builder implements Serializable, SimpleBuildS
             }
         }
 
-        if (!StringUtils.isEmpty(userName)) {
+        if (Util.fixEmpty(userName) != null) {
             if (userName.contains("\\")) {
                 int pos = userName.lastIndexOf("\\");
                 domain = userName.substring(0, pos);
@@ -1296,7 +1296,7 @@ public class TcTestBuilder extends Builder implements Serializable, SimpleBuildS
 
         String accessKeyId = env.expand(getAccessKeyId());
 
-        if (!StringUtils.isEmpty(accessKeyId)) {
+        if (Util.fixEmpty(accessKeyId) != null) {
             StringCredentials credentials = CredentialsProvider.findCredentialById(accessKeyId, StringCredentials.class, run);
 
             if (credentials == null) {
@@ -1420,7 +1420,7 @@ public class TcTestBuilder extends Builder implements Serializable, SimpleBuildS
         @Override
         public Builder newInstance(StaplerRequest req, @Nonnull JSONObject formData) throws FormException {
             TcTestBuilder builder = (TcTestBuilder)super.newInstance(req, formData);
-            if (!StringUtils.isEmpty(builder.getCredentialsId())) {
+            if (Util.fixEmpty(builder.getCredentialsId()) != null) {
                 builder.setUserName("");
                 builder.setUserPassword("");
             }

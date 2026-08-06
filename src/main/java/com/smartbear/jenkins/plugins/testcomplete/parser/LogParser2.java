@@ -29,7 +29,6 @@ import com.smartbear.jenkins.plugins.testcomplete.TcLog;
 import com.smartbear.jenkins.plugins.testcomplete.TcLogInfo;
 import com.smartbear.jenkins.plugins.testcomplete.Utils;
 import hudson.model.TaskListener;
-import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -165,7 +164,7 @@ public class LogParser2 implements ILogParser {
                 messages.addAll(LogNodeUtils.getWarningMessages(rootOwnerNodeInfo));
             }
 
-            writer.writeAttribute("message", StringUtils.join(messages, "\n\n"));
+            writer.writeAttribute("message", String.join("\n\n", messages));
             writer.writeEndElement(); //failure
         }
 
@@ -245,7 +244,7 @@ public class LogParser2 implements ILogParser {
                         messages.addAll(warnings);
                     }
 
-                    writer.writeAttribute("message", StringUtils.join(messages, "\n\n"));
+                    writer.writeAttribute("message", String.join("\n\n", messages));
                     writer.writeEndElement(); //failure
                 }
 
